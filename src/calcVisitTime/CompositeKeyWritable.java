@@ -13,12 +13,12 @@ public class CompositeKeyWritable implements Writable,
   	WritableComparable<CompositeKeyWritable> {
 
 	private String userID;
-	private String timeStamp;
+	private Long timeStamp;
 
 	public CompositeKeyWritable() {
 	}
 
-	public CompositeKeyWritable(String userID, String timeStamp) {
+	public CompositeKeyWritable(String userID, Long timeStamp) {
 		this.userID = userID;
 		this.timeStamp = timeStamp;
 	}
@@ -30,13 +30,18 @@ public class CompositeKeyWritable implements Writable,
 	}
 
 	public void readFields(DataInput dataInput) throws IOException {
-		userID = WritableUtils.readString(dataInput);
-		timeStamp = WritableUtils.readString(dataInput);
+		//userID = WritableUtils.readString(dataInput);
+		//timeStamp = WritableUtils.readVLong(dataInput);
+		timeStamp = dataInput.readLong();
+		userID = dataInput.readUTF();
 	}
 
 	public void write(DataOutput dataOutput) throws IOException {
-		WritableUtils.writeString(dataOutput, userID);
-		WritableUtils.writeString(dataOutput, timeStamp);
+		//WritableUtils.writeString(dataOutput, userID);
+		dataOutput.writeLong(timeStamp);
+		dataOutput.writeUTF(userID);
+
+		//WritableUtils.writeVLong(dataOutput, timeStamp);
 	}
 
 	public int compareTo(CompositeKeyWritable objKeyPair) {
@@ -56,11 +61,11 @@ public class CompositeKeyWritable implements Writable,
 		this.userID = userID;
 	}
 
-	public String getTimeStamp() {
+	public Long getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(String timeStamp) {
+	public void setTimeStamp(Long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
